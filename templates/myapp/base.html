@@ -1,0 +1,30 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap4_5.css' %}">
+    <!-- Custom CSS File -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" >
+    <!-- Favicon Icon -->
+    <link rel="icon" type="image/x-icon" href="{% static '/img/favicon.ico' %}">
+    <title>My-Utility-{% block title %}{% endblock title %}</title>
+</head>
+
+<body>
+
+    {% block body %}{% endblock body %}   
+
+    <!-- jQuery File -->
+    <script src="{% static 'js/jQuery3_5_1.js' %}"></script>
+    <!-- Bootstrap Javascript File -->
+    <script src="{% static 'js/bootstrap4_5.js' %}"></script>
+    <!-- Custom JS File -->
+    <script src="{% static 'js/script.js' %}"></script>
+    
+</body>
+</html>

@@ -1,0 +1,214 @@
+{% extends 'myapp/base.html' %}
+{% block title %}Home{% endblock title %}
+{% block body %}
+
+<!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< NavBar >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/">My-Utility</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Todo</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Logout</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Signup</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    Dropdown
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+
+
+
+<!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Image Uploader Form >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+<div class="container mt-3">
+    <div class='py-5 text-center bg-dark text-white'>
+        <h1>Upload Image Here.....</h1>
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form}}
+            <input type="submit" class='btn btn-warning btn-sm' value="Upload">
+        </form>
+    </div>
+
+
+
+
+    <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Message Tag >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">{{
+        message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+
+    <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<     Opration Multiple Image At a Time     >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+    <div class="dropdown mt-3" id="delete_btn" style="display: none;">
+        <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            More Actions
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" id="delete_allimg" href="">Delete</a>
+            <a class="dropdown-item" href="#">Download</a>
+            <a class="dropdown-item" href="#">Download</a>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<      Image Showing Area     >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+
+    <div class="row" id="ram">
+        {% for img in imgs %}
+        <div class="col-sm-4">
+            <div class="card my-3">
+                <a href="" class="building-link" title="View Image" data-toggle="modal" data-target="#building-modal"
+                    data-img="{{ img.photo.url }}" data-title="{{ img.title }}">
+                    <img src="{{ img.photo.url }} " alt="image" class="card-img-top" height="200px">
+                </a>
+                <div class="row mt-1 ml-3">
+                    <a href="#" data-toggle="modal" data-target="#update-modal" onclick="get_update_id('{{ img.id }}')"
+                        class="btn btn-success btn-sm col-3" data-dismiss="modal" style="padding: 2px;">Update</a>
+
+                    <a href="{% url 'delete_image' img.id %}" class="btn btn-danger btn-sm col-3" data-dismiss="modal"
+                        style="padding: 2px;">Delete</a>
+
+                    <div class="dropdown col-3 mx-0 px-0 ">
+                        <button class="btn btn-sm btn-warning dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 2px;">
+                            More Actions
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Edit</a>
+                            <a class="dropdown-item" href="#">Send</a>
+                            <a class="dropdown-item" href="{{ img.photo.url }}" download>Download</a>
+                        </div>
+                    </div>
+
+                    <input type="checkbox" name="checkbox" value="{{ img.id }}" class="col-3 img_checkbox m-0">
+                </div>
+
+                <div class-'card-footer'>
+                    <small class="text-muted ml-5">Created_At -> {{ img.created_at }}</small>
+                </div>
+            </div>
+        </div>
+
+
+        {% endfor %}
+    </div>
+</div>
+
+
+
+
+
+
+<!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<< Single Image Viewing Modal >>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+<div class="modal fade mymodal in " id="building-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="building-name"></h4>
+            </div>
+            <div class="modal-body">
+                <p id="building-description"></p>
+                <img id="building-img" src="" / class="card-img-top" height="300px">
+
+                <!-- <div class="magnify">
+                    <div class="magnifier" style="background-image: url(example.jpg);"></div>
+                    <div class="magnified">
+                        <img src="example.jpg" />
+                    </div>
+                </div> -->
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Image Update Modal >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+<div class="modal fade mymodal in " id="update-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="update-name">Update Your Image</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container mt-3">
+                    <div class='py-5 text-center bg-dark text-white'>
+                        <form id='updateImageForm' method="POST" enctype="multipart/form-data">
+                           {% csrf_token %}
+                            <input type="text" name="title" id="title" placeholder="Enter Image Title">
+                            <input type="file" name="photo" id="photo">
+                            <input type="hidden" name="pk" value="" id="hidden_id">
+                            <button type="submit" id="id_update" class='btn btn-warning btn-sm'>Update</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        function get_update_id(id) {
+            $('#hidden_id').val(id);
+        }
+
+      
+    </script>
+    {% endblock body %}
