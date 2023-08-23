@@ -27,27 +27,31 @@ $('.img_checkbox').change(function(){
 
 
 
-$(document).ready(function () {
+// $(document).ready(function () {
     $('#id_update').click(function (e) {
         e.preventDefault();
         let form_data = new FormData();
-        form_data.data = $('#updateImageForm').serialize();
-        form_data.photo = $("#photo")[0].files[0];
-
+        // console.log(form_data, "=============");
+        // form_data.data = $('#updateImageForm').serialize();
+        // console.log(form_data, "************");
+        // form_data.photo = $("#photo")[0].files[0];
+        // console.log(form_data, "-------------");
+    
         $.ajax({
-            url: "{% url 'update_image' %}",
-            type: 'POST',
-            processData: false,
-            contentType: false,
-            data: form_data,
-            success: function(data){
-                    alert('Success!');
-                    // $("#serializeForm")[0].reset();
-                    },
-            error: function(data, errorThrown){
-                    alert('request failed :'+errorThrown);
-                    }
+            url: "/update_image/",
+            type: 'GET',
+            data: {"form_data":form_data},
+            processData: false,  // Don't process data
+            contentType: false,  // Don't set content type
+            success: function(data) {
+                console.log('Success! ' + data);
+                // $("#updateImageForm")[0].reset();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert('Request failed: ' + errorThrown);
+            }
         });
     });
-});
+    
+// });
 
